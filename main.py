@@ -5,16 +5,11 @@ from flask import render_template  # import render_template from "public" flask 
 
 # import "packages" from "this" project
 from __init__ import app,db  # Definitions initialization
-from model.jokes import initJokes
-from model.users import initUsers
-from model.players import initPlayers
+from model.users import initAllergyUsers
 
 
 # setup APIs
-from api.covid import covid_api # Blueprint import api definition
-from api.joke import joke_api # Blueprint import api definition
-from api.user import user_api # Blueprint import api definition
-from api.player import player_api
+from api.users import users_api
 
 
 # setup App pages
@@ -24,14 +19,10 @@ from api.player import player_api
 db.init_app(app)
 
 # register URIs
-app.register_blueprint(joke_api) # register api routes
-app.register_blueprint(covid_api) # register api routes
-app.register_blueprint(user_api) # register api routes
-app.register_blueprint(player_api)
+app.register_blueprint(users_api)
 
 @app.errorhandler(404)  # catch for URL not found
 def page_not_found(e):
-    # note that we set the 404 status explicitly
     return render_template('404.html'), 404
 
 @app.route('/')  # connects default URL to index() function
@@ -40,10 +31,7 @@ def index():
 
 @app.before_first_request
 def activate_job():  # activate these items 
-    print("activate_job")
-    # initJokes()
-    # initUsers()
-    # initPlayers()
+    initAllergyUsers()
 
 # this runs the application on the development server
 if __name__ == "__main__":
