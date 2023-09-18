@@ -18,7 +18,6 @@ from api.player import player_api
 
 
 # setup App pages
-from projects.projects import app_projects # Blueprint directory import projects definition
 
 
 # Initialize the SQLAlchemy object to work with the Flask app instance
@@ -29,7 +28,6 @@ app.register_blueprint(joke_api) # register api routes
 app.register_blueprint(covid_api) # register api routes
 app.register_blueprint(user_api) # register api routes
 app.register_blueprint(player_api)
-app.register_blueprint(app_projects) # register app pages
 
 @app.errorhandler(404)  # catch for URL not found
 def page_not_found(e):
@@ -40,15 +38,12 @@ def page_not_found(e):
 def index():
     return render_template("index.html")
 
-@app.route('/table/')  # connects /stub/ URL to stub() function
-def table():
-    return render_template("table.html")
-
 @app.before_first_request
 def activate_job():  # activate these items 
-    initJokes()
-    initUsers()
-    initPlayers()
+    print("activate_job")
+    # initJokes()
+    # initUsers()
+    # initPlayers()
 
 # this runs the application on the development server
 if __name__ == "__main__":
