@@ -6,10 +6,11 @@ from flask import render_template  # import render_template from "public" flask 
 # import "packages" from "this" project
 from __init__ import app,db  # Definitions initialization
 from model.users import initAllergyUsers
+from model.resturuant import initResturuants
 
 
 # setup APIs
-from api.users import users_api
+from api.allergies import users_api
 
 
 # setup App pages
@@ -32,6 +33,7 @@ def index():
 @app.before_first_request
 def activate_job():  # activate these items 
     initAllergyUsers()
+    initResturuants()
 
 # this runs the application on the development server
 if __name__ == "__main__":
