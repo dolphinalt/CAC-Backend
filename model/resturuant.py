@@ -76,7 +76,6 @@ class Resturuant(db.Model):
     ### READ ###
     def read(self):
         return {
-            "id": self.id,
             "username": self.username,
             "name": self.name,
             "pfp": self.pfp,

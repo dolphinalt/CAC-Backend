@@ -83,7 +83,7 @@ class AllergieAPI:
             if name is None:
                 return {'message': f'Name is missing'}, 400
 
-            resturuantObj = Resturuant(name=name, rid=rid, pfp=pfp, about=about, menu=menu)
+            resturuantObj = Resturuant(name=name, username=username, pfp=pfp, about=about, menu=menu)
         
             resturuant = resturuantObj.create()
 

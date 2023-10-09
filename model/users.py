@@ -73,6 +73,9 @@ class User(db.Model):
     ### UTILITIES ###
     def is_username(self, username):
         return self._username == username
+    def set_password(self, password):
+        """Create a hashed password."""
+        self._password = generate_password_hash(password, method='sha256')
     def is_password(self, password):
         """Check against hashed password."""
         result = check_password_hash(self._password, password)
