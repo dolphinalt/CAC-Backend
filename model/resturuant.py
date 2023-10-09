@@ -9,23 +9,22 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 class Resturuant(db.Model):
     __tablename__ = 'Resturuants'
-    id=db.Column(db.Integer, primary_key=True)
-    _rid = db.Column(db.String, unique=True, nullable=False)
+    _username = db.Column(db.String, primary_key=True, unique=True, nullable=False)
     _name = db.Column(db.String, unique=False, nullable=False)
     _pfp = db.Column(db.String, unique=False, nullable=True)
     _about = db.Column(db.String, unique=False, nullable=True)
     _menu = db.Column(db.String, unique=False, nullable=True)
 
-    def __init__(self, id, name, pfp="", about="", menu=""):
-        self._rid = id
+    def __init__(self, username, name, pfp="", about="", menu=""):
+        self._username = username
         self._name = name
         self._pfp = pfp
         self._about = about
         self._menu = menu
     
     @property
-    def rid(self):
-        return self._rid
+    def username(self):
+        return self._username
     @property
     def name(self):
         return self._name
@@ -39,9 +38,9 @@ class Resturuant(db.Model):
     def menu(self):
         return self._menu
     
-    @rid.setter
-    def rid(self, rid):
-        self._rid = rid
+    @username.setter
+    def username(self, username):
+        self._username = username
     @name.setter
     def name(self, name):
         self._name = name
@@ -56,8 +55,8 @@ class Resturuant(db.Model):
         self._menu = menu
     
     ### UTILITIES ###
-    def is_rid(self, rid):
-        return self._rid == rid
+    def is_username(self, username):
+        return self._username == username
     ### UTILITIES ###
 
     def __str__(self):
@@ -78,7 +77,7 @@ class Resturuant(db.Model):
     def read(self):
         return {
             "id": self.id,
-            "rid": self.rid,
+            "username": self.username,
             "name": self.name,
             "pfp": self.pfp,
             "about": self.about,
@@ -112,7 +111,7 @@ class Resturuant(db.Model):
 
 def initResturuants():
     db.create_all()
-    u1=Resturuant(id=3, name="Tea Station", about="Tea Station is a cool resturuant", menu='{"itemName":{"picture":"base64==","description":"testdescription","ingredients":"ing1, ing2, ing3, ing4"}}')
+    u1=Resturuant(username="teastation", name="Tea Station", about="Tea Station is a cool resturuant", menu='{"itemName":{"picture":"base64==","description":"testdescription","ingredients":"ing1, ing2, ing3, ing4"}}')
 
     resturuants = [u1]
 
@@ -121,4 +120,4 @@ def initResturuants():
             resturuant.create()
         except IntegrityError:
             db.session.remove()
-            print(f"Resturuant already exists {resturuant.rid}")
+            print(f"Resturuant already exists {resturuant.username}")

@@ -9,8 +9,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(db.Model):
     __tablename__ = 'users'
-    id=db.Column(db.Integer, primary_key=True)
-    _uid = db.Column(db.String, unique=True, nullable=False)
+    _username = db.Column(db.String, primary_key=True, unique=True, nullable=False)
     _name = db.Column(db.String, unique=False, nullable=False)
     _pfp = db.Column(db.String, unique=False, nullable=True)
     _about = db.Column(db.String, unique=False, nullable=True)
@@ -18,8 +17,8 @@ class User(db.Model):
     _allergies = db.Column(db.String, unique=False, nullable=True)
     _isResturuant = db.Column(db.Boolean, unique=False, nullable=False)
 
-    def __init__(self, id, name, isResturuant, password, pfp="", about="", allergies=""):
-        self._uid = id
+    def __init__(self, username, name, isResturuant, password, pfp="", about="", allergies=""):
+        self._username = username
         self._name = name
         self._pfp = pfp
         self._about = about
@@ -28,8 +27,8 @@ class User(db.Model):
         self._isResturuant = isResturuant
     
     @property
-    def uid(self):
-        return self._uid
+    def username(self):
+        return self._username
     @property
     def name(self):
         return self._name
@@ -49,9 +48,9 @@ class User(db.Model):
     def isResturuant(self):
         return self._isResturuant
     
-    @uid.setter
-    def uid(self, uid):
-        self._uid = uid
+    @username.setter
+    def username(self, username):
+        self._username = username
     @name.setter
     def name(self, name):
         self._name = name
@@ -72,8 +71,8 @@ class User(db.Model):
         self._isResturuant = isResturuant
     
     ### UTILITIES ###
-    def is_uid(self, uid):
-        return self._uid == uid
+    def is_username(self, username):
+        return self._username == username
     def is_password(self, password):
         """Check against hashed password."""
         result = check_password_hash(self._password, password)
@@ -97,8 +96,7 @@ class User(db.Model):
     ### READ ###
     def read(self):
         return {
-            "id": self.id,
-            "uid": self.uid,
+            "username": self.username,
             "name": self.name,
             "pfp": self.pfp,
             "about": self.about,
@@ -133,9 +131,9 @@ class User(db.Model):
 
 def initAllergyUsers():
     db.create_all()
-    u1=User(id=1, name="John", about="John is a cool guy", isResturuant=False, password="password")
-    u2=User(id=2, name="Jacob", about="Jacob is a cool guy", isResturuant=False, password="password")
-    u3=User(id=3, name="Tea Station", about="Tea Station is a cool resturuant", isResturuant=True, password="TeaStationPassword")
+    u1=User(username="john1", name="John", about="John is a cool guy", isResturuant=False, password="password")
+    u2=User(username="jacob1", name="Jacob", about="Jacob is a cool guy", isResturuant=False, password="password")
+    u3=User(username="teastation", name="Tea Station", about="Tea Station is a cool resturuant", isResturuant=True, password="TeaStationPassword")
 
     users = [u1, u2, u3]
 
@@ -144,4 +142,4 @@ def initAllergyUsers():
             user.create()
         except IntegrityError:
             db.session.remove()
-            print(f"User already exists {user.uid}")
+            print(f"User already exists {user.username}")

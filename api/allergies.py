@@ -16,7 +16,7 @@ class AllergieAPI:
         def post(self):
             body = request.get_json()
 
-            uid = body.get('uid')
+            username = body.get('username')
             name = body.get('name')
             pfp = body.get('pfp')
             about = body.get('about')
@@ -24,8 +24,8 @@ class AllergieAPI:
             allergies = body.get('allergies')
             isResturuant = body.get('isResturuant')
 
-            if uid is None:
-                return {'message': f'User ID is missing'}, 400
+            if username is None:
+                return {'message': f'username is missing'}, 400
             if name is None:
                 return {'message': f'Name is missing'}, 400
             if password is None:
@@ -33,7 +33,7 @@ class AllergieAPI:
             if isResturuant is None:
                 return {'message': f'isResturuant is missing'}, 400
 
-            userObj = User(name=name, uid=uid, pfp=pfp, about=about, allergies=allergies, isResturuant=isResturuant)
+            userObj = User(username=username, name=name, isResturuant=isResturuant, password=password, pfp=pfp, about=about, allergies=allergies)
 
             if password is not None:
                 userObj.set_password(password)
@@ -42,7 +42,7 @@ class AllergieAPI:
 
             if user:
                 return jsonify(user.read())
-            return {'message': f'Processed {name}, either a format error or User ID {uid} is duplicate'}, 400
+            return {'message': f'Processed {name}, either a format error or username {username} is duplicate'}, 400
         
         def get(self):
             users = User.query.all()
@@ -53,15 +53,18 @@ class AllergieAPI:
         def post(self):
             body=request.get_json()
 
-            uid = body.get('uid')
+            username = body.get('username')
             password = body.get('password')
 
-            if uid is None:
-                return {'message': f'User ID is missing'}, 400
+            if username is None:
+                return {'message': f'username is missing'}, 400
             
-            user = User.query.filter_by(_uid=uid).first()
+            user = User.query.filter_by(_username=username).first()
+            print(user)
+            print(password)
+            print(user.is_password(password))
             if user is None or not user.is_password(password):
-                return {'message': f"Invalid user id or password"}, 400
+                return {'message': f"Invalid username or password"}, 400
             
             return jsonify(user.read())
 
@@ -69,14 +72,14 @@ class AllergieAPI:
         def post(self):
             body = request.get_json()
 
-            rid = body.get('rid')
+            username = body.get('username')
             name = body.get('name')
             pfp = body.get('pfp')
             about = body.get('about')
             menu = body.get('menu')
 
-            if rid is None:
-                return {'message': f'RID is missing'}, 400
+            if username is None:
+                return {'message': f'username is missing'}, 400
             if name is None:
                 return {'message': f'Name is missing'}, 400
 
@@ -86,7 +89,7 @@ class AllergieAPI:
 
             if resturuant:
                 return jsonify(resturuant.read())
-            return {'message': f'Processed {name}, either a format error or Resturant ID {rid} is duplicate'}, 400
+            return {'message': f'Processed {name}, either a format error or Resturant username {username} is duplicate'}, 400
         
         def get(self):
             resturuants = Resturuant.query.all()
