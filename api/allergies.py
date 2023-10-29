@@ -48,25 +48,29 @@ class AllergieAPI:
             users = User.query.all()
             json_ready = [user.read() for user in users]
             return jsonify(json_ready)
-        
-    class _Security (Resource):
+    
+    class _Authenticate(Resource):
         def post(self):
-            body=request.get_json()
-
+            body = request.get_json()
             username = body.get('username')
             password = body.get('password')
-
-            if username is None:
-                return {'message': f'username is missing'}, 400
-            
+            if len(username) < 1:
+                return {'message': f'Invalid username'}, 210
+            if len(password) < 1:
+                return {'message': f'Empty Password'}, 210
             user = User.query.filter_by(_username=username).first()
             print(user)
             print(password)
             print(user.is_password(password))
             if user is None or not user.is_password(password):
                 return {'message': f"Invalid username or password"}, 400
+            elif user.is_password(password):
+                pwbytes=password.encode("ascii")
+                b64pw_bytes=base64.b64encode(pwbytes)
+                unique=str(b64pw_bytes)[3:11]
+                return username + ":" + unique
             
-            return jsonify(user.read())
+            return None
 
     class _resturuantCRUD(Resource):
         def post(self):
@@ -98,4 +102,4 @@ class AllergieAPI:
     
     api.add_resource(_userCRUD, '/users')
     api.add_resource(_resturuantCRUD, '/resturants')
-    api.add_resource(_Security, '/authenticate')
+    api.add_resource(_Authenticate, '/authenticate')
